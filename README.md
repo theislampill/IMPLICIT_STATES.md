@@ -2,45 +2,15 @@
 
 **Make hidden state explicit when working with coding agents.**
 
-An [`AGENTS.md`](https://agents.md/) addendum that gives coding agents a standing practice for discovering implicit state machines, documenting material findings, and checking consequential transitions against current evidence and authority.
+An [`AGENTS.md`](https://agents.md/) addendum for coding agents to discover implicit state machines, record material findings, and check consequential transitions against current evidence and authority.
 
-The instructions help agents reason about the state already embedded in an application or workflow: scattered flags, files, queues, stages, and ownership conventions. Relevant discoveries go into a maintained `IMPLICIT_STATES.md` registry, or the project's established equivalent, with links to the source and evidence behind them.
+The practice covers state embedded in flags, files, queues, stages, and ownership conventions. Discoveries go into the adopting project's `IMPLICIT_STATES.md` registry, or its established equivalent, with links to authoritative sources and verification evidence.
 
-**Start here:** [Instructions to add](add-to-your-AGENTS.md) · [Personal configuration example](example.AGENTS.md) · [Quick start](#quick-start)
+[Quick start](#quick-start) · [Instruction block](add-to-your-AGENTS.md) · [Personal configuration example](example.AGENTS.md) · [What is an implicit state machine?](#what-is-an-implicit-state-machine)
 
-## What is an implicit state machine?
+## What the practice does
 
-Imagine a file upload. It can be **ready**, **uploading**, **completed**, or **failed**. There are rules about what can happen next: an upload starts after validation, completion requires confirmation, and a failed attempt may be retried when the retry conditions are satisfied.
-
-Those states and rules form a **state machine**.
-
-```mermaid
-stateDiagram-v2
-    Ready --> Uploading: Start after validation
-    Uploading --> Completed: Completion confirmed
-    Uploading --> Failed: Failure confirmed
-    Failed --> Uploading: Retry conditions satisfied
-```
-
-*A simplified example. An actual workflow may need additional states, independent dimensions, and recovery rules.*
-
-The machine is **implicit** when its rules exist but are scattered across the code instead of being clearly defined. For example:
-
-```js
-const isUploading = false;
-const hasUploaded = true;
-const hasError = true;
-```
-
-Does this mean the upload succeeded but an old error remains on screen? Did a later attempt fail? Are the flags inconsistent? If the answer requires piecing together several callbacks, stored values, and retry paths, the state model is difficult to see and maintain.
-
-Making it explicit means naming the meaningful states, explaining which changes are allowed, and identifying the evidence needed to know what happened. A **transition** changes state. A **guard** is a condition that must hold before that transition is allowed. An **invariant** is a rule that must remain true throughout the workflow.
-
-Booleans can be appropriate. Some state dimensions are independent. The aim is to make their relationships clear and prevent unsupported assumptions about valid combinations.
-
-## Why make this a standing practice?
-
-A discovery prompt can identify hidden state during one review. Adding these instructions to the agent's working guidance makes the same questions relevant during ordinary implementation, debugging, recovery, and handoffs.
+A discovery prompt can identify hidden state during one review. Adding the instructions to an agent's working guidance applies the same checks during implementation, debugging, recovery, and handoffs.
 
 The practice asks an agent to:
 
@@ -51,41 +21,20 @@ The practice asks an agent to:
 5. **Verify the result.** Establish the post-state from authoritative evidence and leave unconfirmed effects unverified.
 6. **Harden when authorized.** Improve source behavior and test the relevant failure and concurrency cases within the task's scope.
 
-Useful applications include authentication and session handling, checkout, multi-step forms, background jobs, caches, installers, deployment workflows, approval processes, and ownership handoffs.
+Link existing definitions and tests. Partial entries are acceptable. Keep facts, hypotheses, and unknowns distinct; investigate missing details only when the authorized task requires them. Hold a consequential transition if a material precondition remains unresolved.
 
-## Repository contents
-
-| File | Purpose |
-| --- | --- |
-| [README.md](README.md) | Explains the practice, setup, and evidence boundaries. |
-| [add-to-your-AGENTS.md](add-to-your-AGENTS.md) | The complete instruction block to incorporate into your agent guidance. |
-| [example.AGENTS.md](example.AGENTS.md) | The maintainer's personal `AGENTS.md`, provided as an integration reference. Adapt the relevant parts to your own project. |
-
-The `IMPLICIT_STATES.md` registry described here belongs to **each adopting project**. It records that project's discoveries. This repository supplies the reusable instructions; it does not supply a prepopulated registry for your application.
-
-The instruction block is the reference for the practice. This README explains how to use it. The personal example illustrates one configuration and is optional.
+Applications include authentication and sessions, checkout, multi-step forms, background jobs, caches, installers, deployment workflows, approval processes, and ownership handoffs.
 
 ## Quick start
 
-### 1. Add the instructions
+No package installation is required. The addendum is Markdown guidance for an agent that loads and follows it.
 
-Open [add-to-your-AGENTS.md](add-to-your-AGENTS.md) and copy the complete block into the applicable `AGENTS.md` in your project. Incorporate it alongside the project's existing instructions and ownership rules.
+1. **Add the instructions.** Copy the complete block from [add-to-your-AGENTS.md](add-to-your-AGENTS.md) into your project's applicable `AGENTS.md`. Incorporate it alongside existing instructions and ownership rules.
+2. **Confirm the file loads.** Follow the [agent setup](#agent-setup) guidance for your tool. `example.AGENTS.md` is a reference file; adopted instructions belong in the file your agent actually loads.
+3. **Apply it to the current task.** Start with the affected workflow. Check existing definitions and registry entries before adding anything. Create or update an entry for a material discovery only when the edit is authorized, in scope, and made by or through the permitted writer. Otherwise, report the proposed entry or change.
+4. **Add a registry reference when needed.** Once a registry exists, the applicable repository `AGENTS.md` should explain its purpose and when to consult it. Add a missing reference only when that edit is authorized and in scope; otherwise report the proposed addition.
 
-No package installation is required. The deliverable is Markdown guidance for an agent that loads it.
-
-### 2. Confirm your agent loads the file
-
-Use the setup guidance below for your agent. File discovery, instruction precedence, and imports depend on the tool and its configuration. The example filename, `example.AGENTS.md`, is intended for reference; put adopted instructions in the file your tool actually loads.
-
-### 3. Apply it during relevant work
-
-Begin with the workflow affected by the current task. Check for an existing registry and existing machine definitions before adding anything.
-
-Create or update a registry entry when there is a material discovery, the edit is authorized and in scope, and you are the permitted writer or are acting through that writer. If those conditions are absent, report the proposed entry or change. A partial entry with clearly identified unknowns is useful; investigate missing details when the authorized task needs them. Do not invent missing transitions or present assumed behavior as an observed fact.
-
-### 4. Add a short repository reference when needed
-
-Once a registry exists, the applicable repository `AGENTS.md` should explain its purpose and when to consult it. Add that reference when the edit is authorized and in scope; otherwise report the proposed addition. For example:
+For the repository reference, use a short pointer such as:
 
 ```markdown
 ## Implicit state registry
@@ -95,62 +44,102 @@ Use it to locate authoritative definitions, known gaps, and verification evidenc
 Determine current execution state from the linked runtime or task records.
 ```
 
-Use your established registry path if it has a different name. Keep the inventory in the registry and the pointer in `AGENTS.md` short.
+Use the project's established registry path if it differs. Keep the inventory in the registry, not in `AGENTS.md`.
+
+## What is an implicit state machine?
+
+Imagine a file upload. It can be **ready**, **uploading**, **completed**, or **failed**. Rules determine what can happen next: validation permits an upload to start, confirmation establishes completion, and a failed attempt can be retried when its retry conditions hold.
+
+These states and rules form a **state machine**.
+
+```mermaid
+stateDiagram-v2
+    Ready --> Uploading: Start after validation
+    Uploading --> Completed: Completion confirmed
+    Uploading --> Failed: Failure confirmed
+    Failed --> Uploading: Retry conditions satisfied
+```
+
+*This is a simplified example. An actual workflow may need additional states, independent dimensions, and recovery rules.*
+
+The machine is **implicit** when its rules are scattered across the code instead of clearly defined. For example:
+
+```js
+const isUploading = false;
+const hasUploaded = true;
+const hasError = true;
+```
+
+These flags alone do not tell you whether an upload succeeded with an old error still displayed, a later attempt failed, or the combination is inconsistent. Answering that question may require tracing several callbacks, stored values, and retry paths.
+
+Making the machine explicit means naming its meaningful states, defining allowed changes, and identifying the evidence needed to establish what happened. A **transition** changes state. A **guard** is a condition that must hold before a transition is allowed. An **invariant** is a rule that must remain true throughout the workflow.
+
+Booleans can be appropriate, and some state dimensions are independent. The aim is to clarify their relationships and the constraints on valid combinations.
+
+## Repository contents
+
+| File | Purpose |
+| --- | --- |
+| [README.md](README.md) | Explains the practice, adoption steps, and evidence boundaries. |
+| [add-to-your-AGENTS.md](add-to-your-AGENTS.md) | Contains the complete instruction block to incorporate into agent guidance. |
+| [example.AGENTS.md](example.AGENTS.md) | Shows the maintainer's personal configuration as an optional integration reference. Adapt the relevant parts to your project. |
+
+The instruction block defines the practice; this README explains its use. The personal example is optional.
+
+The `IMPLICIT_STATES.md` registry belongs to **each adopting project** and records that project's discoveries. This repository provides reusable instructions, not a prepopulated registry for your application.
 
 ## Agent setup
 
+File discovery, precedence, and imports depend on the agent and its configuration. Confirm that the adopted instructions load in the context where the agent will work.
+
 ### Codex
 
-Codex reads `AGENTS.md` through its instruction-file discovery hierarchy. Place the block in the applicable guidance file and account for `AGENTS.override.md` and more local instructions. See OpenAI's [AGENTS.md documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md) for discovery, precedence, limits, and setup verification.
+Codex reads `AGENTS.md` through an instruction-file hierarchy. Put the block in the applicable guidance file and account for `AGENTS.override.md` and more local instructions. OpenAI's [AGENTS.md documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md) describes discovery, precedence, limits, and setup verification.
 
 ### Claude Code
 
-Claude Code supports `AGENTS.md`, with automatic loading dependent on its version, settings, and other instruction files. For an explicit import, add this line to a `CLAUDE.md` beside your `AGENTS.md`:
+Claude Code supports `AGENTS.md`, but automatic loading depends on its version, settings, and other instruction files. To import it explicitly, add this line to a `CLAUDE.md` beside your `AGENTS.md`:
 
 ```markdown
 @AGENTS.md
 ```
 
-Keep any Claude-specific guidance alongside the import. Consult the official documentation for [AGENTS.md loading](https://code.claude.com/docs/en/memory#agentsmd) and [sharing one instruction file](https://code.claude.com/docs/en/memory#share-one-file-with-other-coding-tools).
+Keep any Claude-specific guidance alongside the import. The official documentation explains [AGENTS.md loading](https://code.claude.com/docs/en/memory#agentsmd) and [sharing one instruction file](https://code.claude.com/docs/en/memory#share-one-file-with-other-coding-tools).
 
 ### Other coding agents
 
-Use the tool's documented instruction mechanism to load the block. Check its supported filenames, scope, precedence, and import behavior. The [AGENTS.md project](https://agents.md/) provides information about the format and supporting tools.
+Load the block through the tool's documented instruction mechanism. Check supported filenames, scope, precedence, and import behavior. The [AGENTS.md project](https://agents.md/) describes the format and supporting tools.
 
 ## What belongs in the registry?
 
-Use concise notes linked to the relevant source. An entry should make the following understandable, recording unknowns where the evidence is incomplete:
+Write concise, source-linked entries. Record unknowns where evidence is incomplete; do not invent missing transitions or describe assumptions as observed facts.
 
 | Area | What to capture |
 | --- | --- |
-| Identity and scope | A stable machine ID, the affected workflow or decision, and its material dependencies. |
-| Authoritative sources | The code, definitions, configuration, and records that establish behavior or execution facts. |
-| State dimensions | Meaningful states, independent dimensions, and any constraints on their combinations. |
+| Identity and scope | A stable machine ID, the affected workflow or decision, and material dependencies. |
+| Authoritative sources | Code, definitions, configuration, and records that establish behavior or execution facts. |
+| State dimensions | Meaningful states, independent dimensions, and constraints on their combinations. |
 | Transitions | Triggering events, guards, authorized actors, and intended effects. |
 | Invariants and recovery | Rules that must remain true, failure cases, and recovery paths. |
 | Evidence and uncertainty | Observed facts, hypotheses, unknowns, and links to existing definitions and tests. |
-| Hardening and resolution | What is documented, enforced, and verified; unresolved transitions; deferred risks; and source and verification references retained when an entry is resolved. |
+| Hardening and resolution | What is documented, enforced, and verified; unresolved transitions; deferred risks; and source and verification references retained after resolution. |
 
-The registry's value comes from accurate, maintained references. Link to authoritative runtime or task records for live execution state rather than copying their changing status into another document.
+Link to authoritative runtime or task records for current execution state. Do not duplicate their changing status in the registry.
 
 ## Keep four things distinct
 
-| Question | What answers it |
+| Question | Source of the answer |
 | --- | --- |
-| **What is allowed to happen?** | The state model and its transition rules. |
+| **What transitions does the model allow?** | The state model and its transition rules. |
 | **What actually happened?** | Authoritative runtime or task records. |
-| **What is still uncertain?** | Explicit unknowns, hypotheses, and evidence gaps. |
+| **What remains uncertain?** | Explicit unknowns, hypotheses, and evidence gaps. |
 | **Who may act?** | Applicable instructions, task authority, and established ownership. |
 
-For example, a request log may prove that an upload was attempted. It does not necessarily prove that the server committed the file. A timeout can leave the outcome uncertain. The next consequential action must account for that uncertainty, the workflow's retry rules, and the actor's authority.
+For example, a request log may establish that an upload was attempted without proving that the server committed the file. A timeout can leave the outcome uncertain. Any next consequential action must account for that uncertainty, the retry rules, and the actor's authority.
 
-**A model describes allowed behavior. Evidence establishes observed behavior. Neither grants permission.**
-
-Apply authority already established for the task. Discovery alone does not authorize remediation. Hold a consequential transition when a material precondition remains unresolved, and verify the resulting state after acting.
+A model describes allowed behavior; evidence establishes observed behavior. Neither grants permission. Apply authority already established for the task. Identifying a problem does not authorize remediation.
 
 ## Documented, enforced, and verified
-
-These are separate claims:
 
 | Claim | Meaning |
 | --- | --- |
@@ -160,18 +149,16 @@ These are separate claims:
 
 A written guard does not establish that code enforces it. An enforcement mechanism does not establish that every relevant path has been tested.
 
-When hardening is authorized and in scope, test the relevant **invalid, duplicate, stale, interrupted, and concurrent transitions**. Describe the coverage and remaining gaps accurately. Keep deferred risks visible without adding unrelated refactors.
+When hardening is authorized and in scope, test relevant **invalid, duplicate, stale, interrupted, and concurrent transitions**. State the coverage and remaining gaps. Document deferred risks without unrelated refactors.
 
-The addendum supplies instructions for agent behavior. Runtime guarantees require implementation, tests, and operational controls appropriate to the application. Its effectiveness also depends on the agent loading and following the instructions.
+The addendum guides agent behavior. Runtime guarantees require implementation, tests, and operational controls appropriate to the application. The practice also depends on the agent loading and following the instructions.
 
 ## Keep the work proportionate
 
-Discovery follows the authorized task and its material dependencies. Include relevant findings encountered during that task, including findings from completed stages. Leave unrelated completed work outside the investigation.
+Follow the authorized task and its material dependencies. Include relevant discoveries encountered during the task, including those from completed stages. Do not inspect unrelated completed work solely to populate the registry.
 
-Use the project's canonical registry. Create entries for materially relevant implicit, uncertain, or weakly enforced machines. A workflow that is already explicit and adequately verified does not need an entry solely for inventory completeness. Create the registry when there is an actual discovery to record; avoid empty or competing inventories, and preserve genuine findings even when they reveal unfinished work.
+Use the project's canonical registry for materially relevant implicit, uncertain, or weakly enforced machines. Workflows that are already explicit and adequately verified do not need entries solely for inventory completeness. Create a registry when there is an actual discovery to record. Avoid empty or competing inventories, and do not conceal genuine findings to make the inventory appear empty.
 
-For new workflows, define consequential states, transitions, guards, and recovery in the appropriate source from the outset. Choose a representation that fits the project: clear data structures, explicit transition functions, or a state-machine library where useful. The practice does not require a particular framework or a single flat list of states.
+For new workflows, define consequential states, transitions, guards, and recovery in the appropriate source from the outset. Use a representation that fits the project: clear data structures, explicit transition functions, or a state-machine library where useful. The practice requires neither a particular framework nor a single flat list of states.
 
-As findings are resolved, mark their entries accordingly and retain the source and verification references. Future work should be able to see both the discovered risk and the evidence for its resolution.
-
-Report material findings, changes, and unresolved transitions with links to the relevant entries. Reuse those references when the inventory is unchanged.
+Mark resolved entries and retain their source and verification references so later work can trace the finding and its resolution. Report material findings, changes, and unresolved transitions with links to the relevant entries instead of repeating an unchanged inventory.
